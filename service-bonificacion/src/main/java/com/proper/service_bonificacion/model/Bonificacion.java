@@ -36,9 +36,4 @@ public class Bonificacion {
     @Transient
     private Object vendedor;
     private Object pedido;
-
-
-
-    
-
 }

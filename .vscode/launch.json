@@ -2,6 +2,20 @@
     "configurations": [
         {
             "type": "java",
+            "name": "ServiceProductosApplication",
+            "request": "launch",
+            "mainClass": "com.proper.service_productos.ServiceProductosApplication",
+            "projectName": "service-productos"
+        },
+        {
+            "type": "java",
+            "name": "ServicePedidoApplication",
+            "request": "launch",
+            "mainClass": "com.proper.service_pedido.ServicePedidoApplication",
+            "projectName": "service-pedido"
+        },
+        {
+            "type": "java",
             "name": "Spring Boot-ServiceClienteApplication<service-cliente>",
             "request": "launch",
             "cwd": "${workspaceFolder}",

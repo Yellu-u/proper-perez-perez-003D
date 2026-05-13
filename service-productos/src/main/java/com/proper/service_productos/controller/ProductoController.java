@@ -16,7 +16,7 @@ import com.proper.service_productos.model.Producto;
 import com.proper.service_productos.service.ProductoService;
 
 @RestController
-@RequestMapping("/productos")
+@RequestMapping("/api/v1/producto")
 public class ProductoController 
 {
         @Autowired

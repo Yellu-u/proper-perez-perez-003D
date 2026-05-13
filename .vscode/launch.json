@@ -2,6 +2,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "ServiceBonificacionApplication",
+            "request": "launch",
+            "mainClass": "com.proper.service_bonificacion.ServiceBonificacionApplication",
+            "projectName": "service-bonificacion"
+        },
+        {
+            "type": "java",
             "name": "ServiceProductosApplication",
             "request": "launch",
             "mainClass": "com.proper.service_productos.ServiceProductosApplication",

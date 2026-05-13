@@ -1,5 +1,6 @@
 package com.proper.service_pedido.service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -77,7 +78,39 @@ public class PedidoService
                                 detalle.setSubtotal(detalle.getCantidad() * detalle.getPrecioUnitario());
                         }
                 }
-                return pedidoRepository.save(pedido);
+                //Guardamos primero el pedido 
+                Pedido pedidoGuardado = pedidoRepository.save(pedido);
+
+                //Calculamos el total del pedido
+                double total = 0;
+
+                for(DetallePedido detalle : pedidoGuardado.getDetalles())
+                {
+                        total += detalle.getSubtotal();
+                }
+
+                //Se calcula la bonificación
+                double montoBonificacion = total * 0.1;
+
+                //Creamos el objeto bonificación
+                Map<String, Object> bonificacion = Map.of
+                (
+                        "monto", montoBonificacion,
+                        "fecha", LocalDate.now(),
+                        "vendedorId", pedidoGuardado.getVendedorId(),
+                        "pedidoId", pedidoGuardado.getPedidoId()
+                );
+
+                //Se envia a microservicio bonificación
+                webClientBuilder.build()
+                .post()
+                .uri("http://localhost:8086/api/v1/bonificaciones")
+                .bodyValue(bonificacion)
+                .retrieve()
+                .bodyToMono(Object.class)
+                .block();
+
+                return pedidoGuardado;
         }
 
         //Actualizar pedido

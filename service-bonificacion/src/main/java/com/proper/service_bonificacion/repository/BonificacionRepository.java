@@ -9,7 +9,9 @@ import java.util.List;
 @Repository
 public interface BonificacionRepository extends JpaRepository<Bonificacion,Long>
 {
-    List<Bonificacion> findByPedidoId(Long pedidoId);
+    List<Bonificacion> findByBonificacionId(Long pedidoId);
+
+    Bonificacion findByPedidoId(Long pedidoId);
 
     List<Bonificacion> findByVendedorId(Long vendedorId);
 }

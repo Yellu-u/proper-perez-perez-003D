@@ -11,8 +11,6 @@ import com.proper.service_productos.model.Linea;
 import com.proper.service_productos.model.Producto;
 import com.proper.service_productos.repository.ProductoRepository;
 
-import jakarta.transaction.Transactional;
-
 @Service
 public class ProductoService 
 {

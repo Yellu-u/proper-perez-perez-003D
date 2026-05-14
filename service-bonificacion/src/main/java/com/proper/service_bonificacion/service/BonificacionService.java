@@ -82,6 +82,21 @@ public class BonificacionService
         return bonificacion;
     }
 
+    //Actualizamos bonificación por pedido
+    public Bonificacion actualizarPorPedidoId(Long pedidoId, Double nuevoMonto)
+    {
+        Bonificacion bonificacion = bonificacionRepository.findByPedidoId(pedidoId);
+
+        if(bonificacion != null)
+        {
+            bonificacion.setMonto(nuevoMonto);
+
+            return bonificacionRepository.save(bonificacion);
+        }
+
+        return null;
+    }   
+
     //eliminamos bonificación
     public void eliminar(Long bonificacionId) 
     {

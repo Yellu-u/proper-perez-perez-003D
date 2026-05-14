@@ -51,5 +51,4 @@ public class PedidoController
         {
                 pedidoService.eliminarPedido(id);
         }
-
 }

@@ -58,7 +58,7 @@ public class PedidoService
                                 //Buscamos producto desde otro microservicio
                                 Object datosProducto = webClientBuilder.build()
                                 .get()
-                                .uri("http://localhost:8082/api/v1/producto/" + detalle.getProductoId())
+                                .uri("http://localhost:8082/api/v1/productos/" + detalle.getProductoId())
                                 .retrieve()
                                 .bodyToMono(Object.class)
                                 .block();
@@ -140,7 +140,7 @@ public class PedidoService
                                         //Buscamos producto desde otro microservicio
                                         Object datosProducto = webClientBuilder.build()
                                         .get()
-                                        .uri("http://localhost:8082/api/v1/producto/" + detalle.getProductoId())
+                                        .uri("http://localhost:8082/api/v1/productos/" + detalle.getProductoId())
                                         .retrieve()
                                         .bodyToMono(Object.class)
                                         .block();
@@ -159,7 +159,35 @@ public class PedidoService
                                         pedidoCreado.getDetalles().add(detalle);
                                 }
                         }
-                        return pedidoRepository.save(pedidoCreado);
+                        //Guardamos pedido actualizado
+                        Pedido pedidoActualizado = pedidoRepository.save(pedidoCreado);
+
+                        //Calculamos total
+                        double total = 0;
+
+                        for(DetallePedido detallePedido : pedidoActualizado.getDetalles())
+                        {
+                                total += detallePedido.getSubtotal();
+                        }
+
+                        //Calculamos nueva bonificacion
+                        double montoBonificacion = total * 0.1;
+
+                        //Objeto para actualizar bonificación
+                        Map<String, Object> bonificacion = Map.of(
+                        "monto", montoBonificacion
+                        );
+
+                        webClientBuilder.build()
+                        .put()
+                        .uri("http://localhost:8086/api/v1/bonificaciones/pedido/"
+                                + pedidoActualizado.getPedidoId())
+                        .bodyValue(bonificacion)
+                        .retrieve()
+                        .bodyToMono(Object.class)
+                        .block();
+
+                        return pedidoActualizado;
                 }
                 return null;
         }
@@ -169,5 +197,4 @@ public class PedidoService
         {
                 pedidoRepository.deleteById(id);
         }
-
 }

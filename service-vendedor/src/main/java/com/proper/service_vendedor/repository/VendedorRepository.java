@@ -8,6 +8,5 @@ import com.proper.service_vendedor.model.Vendedor;
 @Repository
 public interface VendedorRepository extends JpaRepository<Vendedor, Long>
 {
-    Vendedor findByRunVendedor(String runVendedor);
     Vendedor findByvendedorId(Long vendedorId);
 }

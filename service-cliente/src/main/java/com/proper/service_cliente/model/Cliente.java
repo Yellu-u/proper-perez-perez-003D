@@ -1,6 +1,5 @@
 package com.proper.service_cliente.model;
 
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;

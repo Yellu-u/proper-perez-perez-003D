@@ -1,0 +1,50 @@
+server:
+  port: 9090
+
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      routes:
+        # RUTA SERVICIO DE PRODUCTOS
+        - id: service-productos
+          uri: http://localhost:8082
+          predicates:
+            - Path=/api/v1/productos/**
+
+        # RUTA SERVICIO DE LINEA (dentro de producto)
+        - id: service-linea
+          uri: http://localhost:8082
+          predicates:
+            - Path=/api/v1/productos/linea/**
+
+        # RUTA SERVICIO DE CLIENTES
+        - id: service-cliente
+          uri: http://localhost:8083
+          predicates:
+            - Path=/api/v1/clientes/**
+
+        # RUTA SERVICIO DE EMPRESAS (dentro de cliente)
+        - id: service-empresas 
+          uri: http://localhost:8083
+          predicates:
+            - Path=/api/v1/clientes/empresas/**
+
+        # RUTA SERVICIO DE VENDEDORES 
+        - id: service-vendedor
+          uri: http://localhost:8084
+          predicates:
+            - Path=/api/v1/vendedores/**
+        
+        # RUTA SERVICIO PEDIDO
+        - id: service-pedido
+          uri: http://localhost:8085
+          predicates:
+            - Path=/api/v1/pedido/**
+        
+        # RUTA SERVICIO BONIFICACION
+        - id: service-bonificacion
+          uri: http://localhost:8086
+          predicates:
+            - Path=/api/v1/bonificaciones/**

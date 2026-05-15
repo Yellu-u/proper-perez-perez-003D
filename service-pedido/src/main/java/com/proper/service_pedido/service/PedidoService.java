@@ -195,6 +195,15 @@ public class PedidoService
         //Eliminar pedido
         public void eliminarPedido(Long id)
         {
+                //Eliminar bonificación asociada
+                webClientBuilder.build()
+                .delete()
+                .uri("http://localhost:8086/api/v1/bonificaciones/pedido/" + id)
+                .retrieve()
+                .bodyToMono(Void.class)
+                .block();
+
+                //Eliminar pedido
                 pedidoRepository.deleteById(id);
         }
 }

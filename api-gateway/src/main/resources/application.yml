@@ -33,4 +33,18 @@ spring:
 
         # RUTA SERVICIO DE VENDEDORES
         - id: service-vendedor
-          uri: http://localhost
+          uri: http://localhost:8084
+          predicates:
+            - Path=/api/v1/vendedores/**
+
+        # RUTA SERVICIO PEDIDO
+        - id: service-pedido
+          uri: http://localhost:8085
+          predicates:
+            - Path=/api/v1/pedido/**
+
+        # RUTA SERVICIO BONIFICACION
+        - id: service-bonificacion
+          uri: http://localhost:8086
+          predicates:
+            - Path=/api/v1/bonificaciones/**

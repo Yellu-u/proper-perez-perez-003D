@@ -98,8 +98,13 @@ public class BonificacionService
     }   
 
     //eliminamos bonificación
-    public void eliminar(Long bonificacionId) 
+    public void eliminar(Long pedidoId) 
     {
-        bonificacionRepository.deleteById(bonificacionId);
+        Bonificacion bonificacion = bonificacionRepository.findByPedidoId(pedidoId);
+
+        if(bonificacion != null)
+        {
+            bonificacionRepository.delete(bonificacion);
+        }
     }
 }

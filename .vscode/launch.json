@@ -2,6 +2,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "ApiGatewayApplication",
+            "request": "launch",
+            "mainClass": "com.proper.api_gateway.ApiGatewayApplication",
+            "projectName": "api-gateway"
+        },
+        {
+            "type": "java",
             "name": "ServiceBonificacionApplication",
             "request": "launch",
             "mainClass": "com.proper.service_bonificacion.ServiceBonificacionApplication",

@@ -55,10 +55,10 @@ public class BonificacionController
     }
 
     //ELIMINAR  
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> eliminar(@PathVariable Long id)
+    @DeleteMapping("/pedido/{pedidoId}")
+    public ResponseEntity<Void> eliminar(@PathVariable Long pedidoId)
     {
-        bonificacionService.eliminar(id);
+        bonificacionService.eliminar(pedidoId);
         return ResponseEntity.noContent().build();
     }
 }

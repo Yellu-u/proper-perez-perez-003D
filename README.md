@@ -195,3 +195,8 @@ http://localhost/phpmyadmin/
 
 ## 4. Probar Endpoints en Postman
 Abrir Postman y utilizar los endpoints documentados anteriormente para comprobar el correcto funcionamiento de los microservicios y la comunicación entre ellos.
+
+---
+# 👥 Integrantes
+- Josefina Isidora Pérez Huerta
+- Benjamín Elías Pérez Alfaro

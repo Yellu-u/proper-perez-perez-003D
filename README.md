@@ -197,6 +197,98 @@ http://localhost/phpmyadmin/
 Abrir Postman y utilizar los endpoints documentados anteriormente para comprobar el correcto funcionamiento de los microservicios y la comunicación entre ellos.
 
 ---
+
+# 🧪 Datos de Prueba
+
+## Línea
+
+```json
+{
+  "nombre": "Linea Prueba"
+}
+```
+
+---
+
+## Producto
+
+```json
+{
+  "productoNombre": "Producto Prueba",
+  "precio": 2500,
+  "linea": {
+    "lineaId": 1
+  }
+}
+```
+
+---
+
+## Empresa
+
+```json
+{
+  "razonSocial": "Empresa Prueba SpA",
+  "direccionEmpresa": "Av. Test 123, Santiago",
+  "telefonoEmpresa": "+56911112222"
+}
+```
+
+---
+## Cliente
+
+```json
+{
+  "runCliente": "22.222.222-2",
+  "nombreCliente": "Cliente",
+  "apellidoCliente": "Prueba",
+  "telefonoCliente": "+56933334444",
+  "correoCliente": "cliente.prueba@test.cl",
+  "empresa": {
+    "empresaId": 1
+  }
+}
+```
+
+---
+
+## Vendedor
+
+```json
+{
+  "runVendedor": "11.111.111-1",
+  "nombreVendedor": "Vendedor",
+  "apellidoVendedor": "Prueba",
+  "telefonoVendedor": "+56922223333",
+  "correoVendedor": "vendedor.prueba@test.cl"
+}
+```
+
+---
+
+## Pedido
+
+```json
+{
+  "fecha": "2026-05-16",
+  "estado": "COMPLETADO",
+  "vendedorId": 1,
+  "clienteId": 1,
+  "detalles": [
+    {
+      "cantidad": 3,
+      "productoId": 1
+    }
+  ]
+}
+```
+
+---
+
+## Bonificación
+
+> Las bonificaciones se generan automáticamente al crear un pedido.
+---
 # 👥 Integrantes
 - Josefina Isidora Pérez Huerta
 - Benjamín Elías Pérez Alfaro

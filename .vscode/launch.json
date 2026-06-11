@@ -2,6 +2,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "ServicePagoApplication",
+            "request": "launch",
+            "mainClass": "com.proper.service_pago.ServicePagoApplication",
+            "projectName": "service-pago"
+        },
+        {
+            "type": "java",
             "name": "ApiGatewayApplication",
             "request": "launch",
             "mainClass": "com.proper.api_gateway.ApiGatewayApplication",

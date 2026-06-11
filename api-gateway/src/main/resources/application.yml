@@ -48,3 +48,9 @@ spring:
           uri: http://localhost:8086
           predicates:
             - Path=/api/v1/bonificaciones/**
+
+        # RUTA SERVICIO PAGO
+        - id: service-pago
+          uri: http://localhost:8087
+          predicates:
+            - Path=/api/v1/pagos/**

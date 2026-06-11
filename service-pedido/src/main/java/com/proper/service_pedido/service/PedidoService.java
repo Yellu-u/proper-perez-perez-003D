@@ -110,6 +110,25 @@ public class PedidoService
                 .bodyToMono(Object.class)
                 .block();
 
+                //Creamos el objeto pago
+                Map<String, Object> pago = Map.of(
+                        "monto", total,
+                        "metodoPago", "PENDIENTE",
+                        "estadoPago", "PENDIENTE",
+                        "fechaPago", LocalDate.now(),
+                        "pedidoId", pedidoGuardado.getPedidoId()
+                );
+
+                //Se envia a microservicio pago
+                webClientBuilder.build()
+                .post()
+                .uri("http://localhost:8087/api/v1/pagos")
+                .bodyValue(pago)
+                .retrieve()
+                .bodyToMono(Object.class)
+                .block();
+
+
                 return pedidoGuardado;
         }
 
@@ -187,6 +206,19 @@ public class PedidoService
                         .bodyToMono(Object.class)
                         .block();
 
+                        //Objeto para actualizar pago
+                        Map<String, Object> pago = Map.of(
+                                "monto", total
+                        );
+
+                        webClientBuilder.build()
+                        .put()
+                        .uri("http://localhost:8087/api/v1/pagos/pedido/" + pedidoActualizado.getPedidoId() + "/monto")
+                        .bodyValue(pago)
+                        .retrieve()
+                        .bodyToMono(Object.class)
+                        .block();
+
                         return pedidoActualizado;
                 }
                 return null;
@@ -199,6 +231,13 @@ public class PedidoService
                 webClientBuilder.build()
                 .delete()
                 .uri("http://localhost:8086/api/v1/bonificaciones/pedido/" + id)
+                .retrieve()
+                .bodyToMono(Void.class)
+                .block();
+
+                webClientBuilder.build()
+                .delete()
+                .uri("http://localhost:8087/api/v1/pagos/pedido/" + id)
                 .retrieve()
                 .bodyToMono(Void.class)
                 .block();

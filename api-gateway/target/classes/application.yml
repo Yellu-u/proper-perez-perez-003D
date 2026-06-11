@@ -54,3 +54,9 @@ spring:
           uri: http://localhost:8087
           predicates:
             - Path=/api/v1/pagos/**
+
+        # RUTA SERVICIO DESPACHO
+        - id: service-despacho
+          uri: http://localhost:8090
+          predicates:
+            - Path=/api/v1/despachos/**

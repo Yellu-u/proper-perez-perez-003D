@@ -2,6 +2,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "ServiceDespachoApplication",
+            "request": "launch",
+            "mainClass": "com.proper.service_despacho.ServiceDespachoApplication",
+            "projectName": "service-despacho"
+        },
+        {
+            "type": "java",
             "name": "ServicePagoApplication",
             "request": "launch",
             "mainClass": "com.proper.service_pago.ServicePagoApplication",

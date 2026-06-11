@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -128,6 +129,60 @@ public class PedidoService
                 .bodyToMono(Object.class)
                 .block();
 
+                //Se consulta el objeto de cliente
+                Object datosCliente = webClientBuilder.build()
+                .get()
+                .uri("http://localhost:8083/api/v1/clientes/" + pedidoGuardado.getClienteId())
+                .retrieve()
+                .bodyToMono(Object.class)
+                .block();
+
+                Map<String, Object> clienteMap = (Map<String, Object>) datosCliente;
+
+                Map<String, Object> empresaMap = (Map<String, Object>) clienteMap.get("empresa");
+
+                //a través del map empresa sacamos la dirección que irá asociada al despacho
+                String direccionEmpresa = empresaMap.get("direccionEmpresa").toString();
+
+                //Creamos una regla de negocio para la estimación de la fecha
+                int cantidadTotal = 0;
+
+                for(DetallePedido detalle : pedidoGuardado.getDetalles())
+                {
+                        cantidadTotal += detalle.getCantidad();
+                }
+
+                LocalDate fechaEstimada;
+
+                if(cantidadTotal <= 20)
+                {
+                        fechaEstimada = LocalDate.now().plusDays(3);
+                }
+                else if(cantidadTotal <= 50)
+                {
+                        fechaEstimada = LocalDate.now().plusDays(5);
+                }
+                else
+                {
+                        fechaEstimada = LocalDate.now().plusDays(7);
+                }
+
+                //Se crea el objeto despacho
+                Map<String, Object> despacho = Map.of(
+                        "direccionEntrega", direccionEmpresa,
+                        "fechaEstimada", fechaEstimada,
+                        "estadoDespacho", "PENDIENTE",
+                        "pedidoId", pedidoGuardado.getPedidoId()
+                );
+
+                //Se envia a microservicio despacho
+                webClientBuilder.build()
+                .post()
+                .uri("http://localhost:8090/api/v1/despachos")
+                .bodyValue(despacho)
+                .retrieve()
+                .bodyToMono(Object.class)
+                .block();
 
                 return pedidoGuardado;
         }
@@ -238,6 +293,13 @@ public class PedidoService
                 webClientBuilder.build()
                 .delete()
                 .uri("http://localhost:8087/api/v1/pagos/pedido/" + id)
+                .retrieve()
+                .bodyToMono(Void.class)
+                .block();
+
+                webClientBuilder.build()
+                .delete()
+                .uri("http://localhost:8090/api/v1/despachos/pedido/" + id)
                 .retrieve()
                 .bodyToMono(Void.class)
                 .block();

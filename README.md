@@ -12,6 +12,7 @@ Sistema desarrollado mediante arquitectura de microservicios para gestionar:
 - Pedidos
 - Bonificaciones
 - Vendedores
+- Pagos
 
 ---
 
@@ -32,6 +33,7 @@ Sistema desarrollado mediante arquitectura de microservicios para gestionar:
 | service-vendedor | 8084 |
 | service-pedido | 8085 |
 | service-bonificacion | 8086 |
+| service-bonificacion | 8087 |
 | api-gateway | 9090 |
 
 ---
@@ -130,6 +132,27 @@ Sistema desarrollado mediante arquitectura de microservicios para gestionar:
 
 > Las bonificaciones se generan, actualizan y eliminan automáticamente al crear, modificar o eliminar un pedido
 
+## Service-Pago
+### Pagos
+
+``` http://localhost:8087/api/v1/pagos ```
+
+``` http://localhost:8087/api/v1/pagos/{id} ```
+
+| Método | Endpoint | Descripción |
+|---|---|---|
+| GET | /api/v1/pagos | Obtener pagos |
+| GET | /api/v1/pagos/{id} | Obtener pago por ID |
+| POST | /api/v1/pagos | Crear pago |
+| PUT | /api/v1/pagos/pedido/{pedidoId}/estado | Actualizar estado y método de pago |
+| DELETE | /api/v1/pagos/pedido/{pedidoId} | Eliminar pago asociado a un pedido |
+
+> Los pagos se generan automáticamente al crear un pedido, inicializándose con estado **PENDIENTE**.
+
+> Al actualizar un pedido, el monto del pago se actualiza automáticamente.
+
+> Al eliminar un pedido, el pago asociado también se elimina automáticamente.
+
 ## API Gateway
 ``` http://localhost:9090/api/v1/ ```
 
@@ -142,6 +165,7 @@ Sistema desarrollado mediante arquitectura de microservicios para gestionar:
 - CRUD de pedidos
 - Cálculo automático de subtotales  
 - Generación automática de bonificaciones  
+- Generación automática de pagos
 - Comunicación entre microservicios
 
 ---
@@ -178,6 +202,7 @@ Levantar todos los microservicios Spring Boot junto con el API Gateway para perm
 | service-vendedor | 8084 |
 | service-pedido | 8085 |
 | service-bonificacion | 8086 |
+| service-pago | 8087 |
 
 ## 3. Importar Bases de Datos
 Este paso es opcional, ya que el proyecto incluye scripts SQL con bases de datos previamente pobladas para facilitar las pruebas.
@@ -288,6 +313,10 @@ Abrir Postman y utilizar los endpoints documentados anteriormente para comprobar
 ## Bonificación
 
 > Las bonificaciones se generan automáticamente al crear un pedido.
+
+## Pago
+
+> Los pagos se generan automáticamente al crear un pedido.
 ---
 # 👥 Integrantes
 - Josefina Isidora Pérez Huerta

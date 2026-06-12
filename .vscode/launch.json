@@ -12,7 +12,8 @@
             "name": "ServicePagoApplication",
             "request": "launch",
             "mainClass": "com.proper.service_pago.ServicePagoApplication",
-            "projectName": "service-pago"
+            "projectName": "service-pago",
+            "vmArgs": " -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=56294 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dspring.jmx.enabled=true -Djava.rmi.server.hostname=localhost -Dspring.application.admin.enabled=true -Dspring.boot.project.name=service-pago"
         },
         {
             "type": "java",
@@ -60,6 +61,26 @@
             "cwd": "${workspaceFolder}",
             "mainClass": "com.proper.service_vendedor.ServiceVendedorApplication",
             "projectName": "service-vendedor",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-ServiceInventarioApplication<service-inventario>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.proper.service_inventario.ServiceInventarioApplication",
+            "projectName": "service-inventario",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-ServiceFacturacionApplication<service-facturacion>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.proper.service_facturacion.ServiceFacturacionApplication",
+            "projectName": "service-facturacion",
             "args": "",
             "envFile": "${workspaceFolder}/.env"
         }

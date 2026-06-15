@@ -19,8 +19,6 @@ public class InventarioService {
     @Autowired
     private InventarioRepository inventarioRepository;
 
-
-
     //Obtener Inventario Completo
     public List<Inventario> obtenerInventario()
     {
@@ -95,12 +93,4 @@ public class InventarioService {
 
         inventarioRepository.deleteAll(inventarios);
     }
-
-
-
 }
-
-
-
-
-

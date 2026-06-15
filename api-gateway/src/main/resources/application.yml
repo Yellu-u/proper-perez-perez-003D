@@ -54,13 +54,14 @@ spring:
           uri: http://localhost:8087
           predicates:
             - Path=/api/v1/pagos/**
-        # RUTA SERVICIO Inventario
+
+        # RUTA SERVICIO INVENTARIO
         - id: service-inventario
           uri: http://localhost:8088
           predicates:
             - Path=/api/v1/inventario/**
         
-        # RUTA SERVICIO PAGO
+        # RUTA SERVICIO FACTURACIÓN
         - id: service-facturacion
           uri: http://localhost:8089
           predicates:
@@ -71,3 +72,9 @@ spring:
           uri: http://localhost:8090
           predicates:
             - Path=/api/v1/despachos/**
+
+        # RUTA SERVICIO REPORTE
+        - id: service-despacho
+          uri: http://localhost:8091
+          predicates:
+            - Path=/api/v1/reportes/**

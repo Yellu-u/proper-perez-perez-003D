@@ -154,11 +154,11 @@ public class PedidoService
 
                 LocalDate fechaEstimada;
 
-                if(cantidadTotal <= 20)
+                if(cantidadTotal <= 20) //Si la cantidad de productos es menor o = a 20 se estima un tiempo de 3 días
                 {
                         fechaEstimada = LocalDate.now().plusDays(3);
                 }
-                else if(cantidadTotal <= 50)
+                else if(cantidadTotal <= 50) //Si la cantidad de productos es menor o = a 50 se estima un tiempo de 5 días
                 {
                         fechaEstimada = LocalDate.now().plusDays(5);
                 }

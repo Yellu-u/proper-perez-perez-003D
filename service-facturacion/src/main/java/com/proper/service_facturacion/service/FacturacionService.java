@@ -20,7 +20,7 @@ public class FacturacionService {
         return facturacionRepository.findAll();
     }
 
-    public Facturacion obtenerFacturacion(Long id)
+    public Facturacion obtenerFacturacionid(Long id)
     {
         return facturacionRepository.findById(id).orElse(null);
     }
@@ -51,5 +51,6 @@ public class FacturacionService {
     public void eliminarFactura(Long id){
         facturacionRepository.deleteById(id);
     }
+
 
 }

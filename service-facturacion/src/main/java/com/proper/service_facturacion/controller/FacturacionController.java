@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,8 +29,23 @@ public class FacturacionController {
     }
 
     @GetMapping("/{id}")
-    public Facturacion buscar(@PathVariable Long id,@RequestBody Facturacion facturacion)
+    public Facturacion buscar(@PathVariable Long id)
     {
+        return facturacionService.obtenerFacturacionid(id);
+    }
+
+    @PostMapping
+    public Facturacion guardar(
+            @RequestBody Facturacion facturacion){
+
+        return facturacionService.guardarFacturacion(facturacion);
+    }
+
+    @PutMapping("/{id}")
+    public Facturacion actualizar(
+            @PathVariable Long id,
+            @RequestBody Facturacion facturacion){
+
         return facturacionService.actualizarFactura(id, facturacion);
     }
 

@@ -60,7 +60,6 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
     private Mono<Void> onError(ServerWebExchange exchange, String err, HttpStatus httpStatus) 
     {
         exchange.getResponse().setStatusCode(httpStatus);
-        // Aquí podrías añadir lógica para escribir el mensaje 'err' en el body si quisieras
         return exchange.getResponse().setComplete();
     }
 }

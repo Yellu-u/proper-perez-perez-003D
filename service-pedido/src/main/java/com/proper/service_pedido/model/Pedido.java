@@ -11,6 +11,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -28,16 +30,20 @@ public class Pedido
     @Schema(description = "ID único autoincremental del pedido", example = "23")
     private Long pedidoId;
 
-    @Schema(description = "Fecha en la que se registra el pedido", example = "2026-06-21")
+    @NotNull(message = "La fecha del pedido es obligatoria")
+    @Schema(description = "Fecha en la que se registra el pedido", example = "2026-06-21", requiredMode = Schema.RequiredMode.REQUIRED)
     private LocalDate fecha;
 
-    @Schema(description = "Estado actual de la orden de pedido", example = "EN PROCESO")
+    @NotBlank(message = "El estado del pedido es obligatorio")
+    @Schema(description = "Estado actual de la orden de pedido", example = "EN PROCESO", requiredMode = Schema.RequiredMode.REQUIRED)
     private String estado; //ej: completo, incompleto, en proceso
     
-    @Schema(description = "ID del Vendedor asignado (Referencia lógica al microservicio de Vendedores)", example = "1")
+    @NotNull(message = "El ID del vendedor es obligatorio")
+    @Schema(description = "ID del Vendedor asignado (Referencia lógica al microservicio de Vendedores)", example = "1", requiredMode = Schema.RequiredMode.REQUIRED)
     private Long vendedorId;
 
-    @Schema(description = "ID del Cliente solicitante (Referencia lógica al microservicio de Clientes)", example = "3")
+    @NotNull(message = "El ID del cliente es obligatorio")
+    @Schema(description = "ID del Cliente solicitante (Referencia lógica al microservicio de Clientes)", example = "3", requiredMode = Schema.RequiredMode.REQUIRED)
     private Long clienteId;
 
     @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, orphanRemoval = true)

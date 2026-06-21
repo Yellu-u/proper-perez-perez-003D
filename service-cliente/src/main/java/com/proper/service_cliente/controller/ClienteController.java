@@ -19,6 +19,7 @@ import com.proper.service_cliente.service.ClienteService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/v1/clientes")
@@ -50,7 +51,8 @@ public class ClienteController
     @PostMapping
     @Operation(summary = "Crear un nuevo cliente", description = "Registra un nuevo cliente en el sistema y retorna el objeto creado")
     @ApiResponse(responseCode = "200", description = "Cliente creado con éxito")
-    public ResponseEntity<Cliente> crearCliente(@RequestBody Cliente cliente)
+    @ApiResponse(responseCode = "400", description = "Datos mal formados o campos obligatorios faltantes")
+    public ResponseEntity<Cliente> crearCliente(@Valid @RequestBody Cliente cliente)
     {
         return ResponseEntity.ok(clienteService.crearCliente(cliente));
     }
@@ -67,7 +69,8 @@ public class ClienteController
     @PutMapping("/{id}")
     @Operation(summary = "Actualizar un cliente existente", description = "Modifica los atributos de un cliente basado en su ID")
     @ApiResponse(responseCode = "200", description = "Cliente actualizado con éxito")
-    public Cliente actualizarCliente(@PathVariable Long id, @RequestBody Cliente cliente)
+    @ApiResponse(responseCode = "400", description = "Datos mal formados o campos obligatorios faltantes")
+    public Cliente actualizarCliente(@PathVariable Long id, @Valid @RequestBody Cliente cliente)
     {
         return clienteService.actualizarCliente(id, cliente);
     }

@@ -19,6 +19,7 @@ import com.proper.service_pedido.service.PedidoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/v1/pedido")
@@ -31,7 +32,8 @@ public class PedidoController
         @PostMapping
         @Operation(summary = "Crear un nuevo pedido", description = "Registra una orden de pedido completa con su respectiva lista de detalles")
         @ApiResponse(responseCode = "200", description = "Pedido registrado y guardado con éxito")
-        public Pedido crear(@RequestBody Pedido pedido)
+        @ApiResponse(responseCode = "400", description = "Datos mal formados o campos obligatorios faltantes")
+        public Pedido crear(@Valid @RequestBody Pedido pedido)
         {
                 return pedidoService.guardarPedido(pedido);
         }
@@ -39,7 +41,8 @@ public class PedidoController
         @PutMapping("/{id}")
         @Operation(summary = "Actualizar un pedido existente", description = "Modifica los estados o detalles de un pedido basado en su ID")
         @ApiResponse(responseCode = "200", description = "Pedido actualizado con éxito")
-        public Pedido actualizarPedido(@PathVariable Long id, @RequestBody Pedido pedido)
+        @ApiResponse(responseCode = "400", description = "Datos mal formados o campos obligatorios faltantes")
+        public Pedido actualizarPedido(@PathVariable Long id, @Valid @RequestBody Pedido pedido)
         {
                 return pedidoService.actualizarPedido(id, pedido);
         }

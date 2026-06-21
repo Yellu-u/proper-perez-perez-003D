@@ -44,6 +44,7 @@ public class ReporteController
     @PostMapping("/generar")
     @Operation(summary = "Generar reporte por rango de fechas", description = "Activa el motor de analítica para recopilar información de pedidos, finanzas y logística en un rango temporal y persistir los KPIs obtenidos")
     @ApiResponse(responseCode = "200", description = "Reporte analítico generado y guardado de forma exitosa")
+    @ApiResponse(responseCode = "400", description = "Datos mal formados, formatos de fecha inválidos o parámetros faltantes")
     public Reporte generarReporte(@RequestBody Map<String, String> datos)
     {
         LocalDate fechaInicio = LocalDate.parse(datos.get("fechaInicio"));

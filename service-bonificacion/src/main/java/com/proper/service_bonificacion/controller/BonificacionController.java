@@ -21,6 +21,7 @@ import com.proper.service_bonificacion.service.BonificacionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/v1/bonificaciones")
@@ -50,7 +51,8 @@ public class BonificacionController
     @PostMapping
     @Operation(summary = "Crear una nueva bonificación", description = "Registra una bonificación y la asocia a un pedido y vendedor")
     @ApiResponse(responseCode = "200", description = "Bonificación creada con éxito")
-    public Bonificacion crear(@RequestBody Bonificacion bonificacion)
+    @ApiResponse(responseCode = "400", description = "Datos mal formados o campos obligatorios faltantes")
+    public Bonificacion crear(@Valid @RequestBody Bonificacion bonificacion)
     {
         return bonificacionService.guardarBonificacion(bonificacion);
     }

@@ -7,6 +7,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -26,22 +28,28 @@ public class EstadisticaVendedor
         @Schema(description = "ID único autoincremental de la métrica", example = "50")
         private Long estadisticaId;
 
-        @Schema(description = "ID del Vendedor evaluado (Referencia al microservicio de Vendedores)", example = "4")
+        @NotNull(message = "El ID del vendedor es obligatorio")
+        @Schema(description = "ID del Vendedor evaluado (Referencia al microservicio de Vendedores)", example = "4", requiredMode = Schema.RequiredMode.REQUIRED)
         private Long vendedorId;
 
-        @Schema(description = "Nombre completo del ejecutivo comercial", example = "Ana María Silva")
+        @NotBlank(message = "El nombre del vendedor es obligatorio")
+        @Schema(description = "Nombre completo del ejecutivo comercial", example = "Ana María Silva", requiredMode = Schema.RequiredMode.REQUIRED)
         private String nombreVendedor;
 
-        @Schema(description = "Cantidad de pedidos cerrados por el vendedor en el rango de fechas", example = "35")
+        @NotNull(message = "El total de pedidos es obligatorio")
+        @Schema(description = "Cantidad de pedidos cerrados por el vendedor en el rango de fechas", example = "35", requiredMode = Schema.RequiredMode.REQUIRED)
         private Integer totalPedidos;
 
-        @Schema(description = "Volumen económico total vendido por el ejecutivo", example = "4200000.00")
+        @NotNull(message = "El total de ventas es obligatorio")
+        @Schema(description = "Volumen económico total vendido por el ejecutivo", example = "4200000.00", requiredMode = Schema.RequiredMode.REQUIRED)
         private Double totalVentas;
 
-        @Schema(description = "Monto acumulado de bonificaciones obtenidas por el vendedor", example = "85000.00")
+        @NotNull(message = "El total de bonificaciones es obligatorio")
+        @Schema(description = "Monto acumulado de bonificaciones obtenidas por el vendedor", example = "85000.00", requiredMode = Schema.RequiredMode.REQUIRED)
         private Double totalBonificaciones;
 
-        @Schema(description = "Ticket promedio de venta calculado (Total Ventas / Total Pedidos)", example = "120000.00")
+        @NotNull(message = "El promedio de venta es obligatorio")
+        @Schema(description = "Ticket promedio de venta calculado (Total Ventas / Total Pedidos)", example = "120000.00", requiredMode = Schema.RequiredMode.REQUIRED)
         private Double promedioVenta;
 
         @ManyToOne

@@ -5,6 +5,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,7 +24,8 @@ public class Empresa
     @Schema(description = "ID único autoincremental de la empresa", example = "1")
     private Long empresaId;
 
-    @Schema(description = "Razón social o nombre legal de la empresa", example = "Logística S.A.")
+    @NotBlank(message = "La razón social de la empresa es obligatoria")
+    @Schema(description = "Razón social o nombre legal de la empresa", example = "Logística S.A.", requiredMode = Schema.RequiredMode.REQUIRED)
     private String razonSocial;
 
     @Schema(description = "Dirección física de la empresa", example = "Av. Vitacura 1234, Santiago")

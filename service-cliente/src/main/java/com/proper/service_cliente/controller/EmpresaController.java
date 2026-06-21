@@ -19,6 +19,7 @@ import com.proper.service_cliente.model.Empresa;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/v1/clientes/empresas")
@@ -30,7 +31,7 @@ public class EmpresaController
 
     @GetMapping
     @Operation(summary = "Listar todas las empresas", description = "Retorna una lista completa de todas las empresas registradas")
-    @ApiResponse(responseCode = "200", description = "Lista de empresas obtenida con éxito")
+    @ApiResponse(responseCode = "200", description = "Lista de empresas obtuvo con éxito")
     public List<Empresa> listar()
     {
         return clienteService.listarTodasEmpresas();
@@ -50,7 +51,8 @@ public class EmpresaController
     @PostMapping
     @Operation(summary = "Crear una nueva empresa", description = "Registra una nueva empresa en el sistema")
     @ApiResponse(responseCode = "200", description = "Empresa creada con éxito")
-    public ResponseEntity<Empresa> crearEmpresa(@RequestBody Empresa empresa)
+    @ApiResponse(responseCode = "400", description = "Datos mal formados o campos obligatorios faltantes")
+    public ResponseEntity<Empresa> crearEmpresa(@Valid @RequestBody Empresa empresa)
     {
         return ResponseEntity.ok(clienteService.crearEmpresa(empresa));
     }
@@ -67,7 +69,8 @@ public class EmpresaController
     @PutMapping("/{id}")
     @Operation(summary = "Actualizar una empresa existente", description = "Modifica los campos de una entidad empresa según su ID")
     @ApiResponse(responseCode = "200", description = "Empresa actualizada con éxito")
-    public Empresa actualizarEmpresa(@PathVariable Long id, @RequestBody Empresa empresa)
+    @ApiResponse(responseCode = "400", description = "Datos mal formados o campos obligatorios faltantes")
+    public Empresa actualizarEmpresa(@PathVariable Long id, @Valid @RequestBody Empresa empresa)
     {
         return clienteService.actualizarEmpresa(id, empresa);
     }

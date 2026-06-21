@@ -8,6 +8,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -26,13 +27,16 @@ public class Cliente
     @Schema(description = "ID único autoincremental del cliente", example = "1")
     private Long clienteId;
 
-    @Schema(description = "RUN o Identificación oficial del cliente", example = "12345678-9")
+    @NotBlank(message = "El RUN del cliente es obligatorio")
+    @Schema(description = "RUN o Identificación oficial del cliente", example = "12345678-9", requiredMode = Schema.RequiredMode.REQUIRED)
     private String runCliente;
 
-    @Schema(description = "Nombres del cliente", example = "Juan Pablo")
+    @NotBlank(message = "El nombre del cliente es obligatorio")
+    @Schema(description = "Nombres del cliente", example = "Juan Pablo", requiredMode = Schema.RequiredMode.REQUIRED)
     private String nombreCliente;
 
-    @Schema(description = "Apellidos del cliente", example = "Pérez Gómez")
+    @NotBlank(message = "El apellido del cliente es obligatorio")
+    @Schema(description = "Apellidos del cliente", example = "Pérez Gómez", requiredMode = Schema.RequiredMode.REQUIRED)
     private String apellidoCliente;
 
     @Schema(description = "Teléfono de contacto del cliente", example = "+56987654321")

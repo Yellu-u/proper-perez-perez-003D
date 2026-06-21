@@ -17,6 +17,7 @@ import com.proper.service_facturacion.service.FacturacionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/v1/facturacion")
@@ -46,14 +47,16 @@ public class FacturacionController {
     @PostMapping
     @Operation(summary = "Generar nueva factura", description = "Crea y emite un nuevo registro contable de facturación")
     @ApiResponse(responseCode = "200", description = "Factura guardada con éxito")
-    public Facturacion guardar(@RequestBody Facturacion facturacion){
+    @ApiResponse(responseCode = "400", description = "Datos mal formados o campos obligatorios faltantes")
+    public Facturacion guardar(@Valid @RequestBody Facturacion facturacion){
         return facturacionService.guardarFacturacion(facturacion);
     }
 
     @PutMapping("/{id}")
     @Operation(summary = "Actualizar factura existente", description = "Modifica los campos tributarios o de estados de una factura específica")
     @ApiResponse(responseCode = "200", description = "Factura actualizada correctamente")
-    public Facturacion actualizar(@PathVariable Long id, @RequestBody Facturacion facturacion){
+    @ApiResponse(responseCode = "400", description = "Datos mal formados o campos obligatorios faltantes")
+    public Facturacion actualizar(@PathVariable Long id, @Valid @RequestBody Facturacion facturacion){
         return facturacionService.actualizarFactura(id, facturacion);
     }
 

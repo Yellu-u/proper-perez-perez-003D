@@ -21,6 +21,7 @@ import com.proper.service_despacho.service.DespachoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/v1/despachos")
@@ -50,7 +51,8 @@ public class DespachoController
         @PostMapping
         @Operation(summary = "Crear una nueva orden de despacho", description = "Inicializa el flujo logístico de entrega para un pedido de venta")
         @ApiResponse(responseCode = "200", description = "Despacho programado con éxito")
-        public Despacho crear(@RequestBody Despacho despacho)
+        @ApiResponse(responseCode = "400", description = "Datos mal formados o campos obligatorios faltantes")
+        public Despacho crear(@Valid @RequestBody Despacho despacho)
         {
                 return despachoService.guardarDespacho(despacho);
         }

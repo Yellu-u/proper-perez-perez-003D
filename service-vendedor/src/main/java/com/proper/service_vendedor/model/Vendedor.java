@@ -4,6 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,13 +22,16 @@ public class Vendedor
     @Schema(description = "ID único autoincremental del vendedor", example = "1")
     private Long vendedorId;
 
-    @Schema(description = "RUN o RUT identificador oficial del vendedor", example = "11222333-K")
+    @NotBlank(message = "El RUN del vendedor es obligatorio")
+    @Schema(description = "RUN o RUT identificador oficial del vendedor", example = "11222333-K", requiredMode = Schema.RequiredMode.REQUIRED)
     private String runVendedor;
 
-    @Schema(description = "Nombres del vendedor", example = "Carlos Andrés")
+    @NotBlank(message = "El nombre del vendedor es obligatorio")
+    @Schema(description = "Nombres del vendedor", example = "Carlos Andrés", requiredMode = Schema.RequiredMode.REQUIRED)
     private String nombreVendedor;
 
-    @Schema(description = "Apellidos del vendedor", example = "Soto Mayor")
+    @NotBlank(message = "El apellido del vendedor es obligatorio")
+    @Schema(description = "Apellidos del vendedor", example = "Soto Mayor", requiredMode = Schema.RequiredMode.REQUIRED)
     private String apellidoVendedor;
 
     @Schema(description = "Correo electrónico corporativo de contacto", example = "carlos.soto@empresa.com")

@@ -21,6 +21,7 @@ import com.proper.service_pago.service.PagoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/v1/pagos")
@@ -50,7 +51,8 @@ public class PagoController
         @PostMapping
         @Operation(summary = "Registrar un nuevo pago", description = "Crea un registro de pago inicial asociado a un pedido de venta")
         @ApiResponse(responseCode = "200", description = "Transacción de pago creada con éxito")
-        public Pago crear(@RequestBody Pago pago)
+        @ApiResponse(responseCode = "400", description = "Datos mal formados o campos obligatorios faltantes")
+        public Pago crear(@Valid @RequestBody Pago pago)
         {
                 return pagoService.guardarPago(pago);
         }

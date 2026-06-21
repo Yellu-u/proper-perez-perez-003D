@@ -19,6 +19,7 @@ import com.proper.service_vendedor.service.VendedorService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/v1/vendedores")
@@ -48,7 +49,8 @@ public class VendedorController
     @PostMapping
     @Operation(summary = "Crear un nuevo vendedor", description = "Registra un nuevo vendedor en el sistema y retorna el registro guardado")
     @ApiResponse(responseCode = "200", description = "Vendedor creado con éxito")
-    public ResponseEntity<Vendedor> crear(@RequestBody Vendedor vendedor)
+    @ApiResponse(responseCode = "400", description = "Datos mal formados o campos obligatorios faltantes")
+    public ResponseEntity<Vendedor> crear(@Valid @RequestBody Vendedor vendedor)
     {
         return ResponseEntity.ok(vendedorService.guardar(vendedor));
     }
@@ -65,7 +67,8 @@ public class VendedorController
     @PutMapping("/{id}")
     @Operation(summary = "Actualizar un vendedor existente", description = "Modifica los atributos del vendedor en base a su identificador único")
     @ApiResponse(responseCode = "200", description = "Vendedor actualizado con éxito")
-    public Vendedor actualizar(@PathVariable Long id,@RequestBody Vendedor vendedor)
+    @ApiResponse(responseCode = "400", description = "Datos mal formados o campos obligatorios faltantes")
+    public Vendedor actualizar(@PathVariable Long id, @Valid @RequestBody Vendedor vendedor)
     {
         return vendedorService.actualizarVendedor(id, vendedor);
     }

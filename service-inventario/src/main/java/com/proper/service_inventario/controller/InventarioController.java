@@ -17,6 +17,7 @@ import com.proper.service_inventario.service.InventarioService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/v1/inventario")
@@ -54,7 +55,8 @@ public class InventarioController {
     @PostMapping
     @Operation(summary = "Crear registro de inventario", description = "Inicializa el control de stock para un nuevo ítem en el almacén")
     @ApiResponse(responseCode = "200", description = "Registro de inventario creado con éxito")
-    public Inventario crear(@RequestBody Inventario inventario)
+    @ApiResponse(responseCode = "400", description = "Datos mal formados o campos obligatorios faltantes")
+    public Inventario crear(@Valid @RequestBody Inventario inventario)
     {
         return inventarioService.guardarInventario(inventario);
     }
@@ -62,7 +64,8 @@ public class InventarioController {
     @PutMapping("/{id}")
     @Operation(summary = "Actualizar niveles de inventario", description = "Modifica los valores de stock actual, mínimo o fechas de auditoría")
     @ApiResponse(responseCode = "200", description = "Stock actualizado correctamente")
-    public Inventario actualizarInventario(@PathVariable Long id, @RequestBody Inventario inventario)
+    @ApiResponse(responseCode = "400", description = "Datos mal formados o campos obligatorios faltantes")
+    public Inventario actualizarInventario(@PathVariable Long id, @Valid @RequestBody Inventario inventario)
     {
         return inventarioService.actualizarInventario(id, inventario);
     }

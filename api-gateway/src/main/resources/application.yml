@@ -176,7 +176,7 @@ spring:
 
         # RUTA SERVICIO REPORTE
         - id: service-reportes
-          uri: http://localhost:8091
+          uri: http://localhost:8092
           predicates:
             - Path=/api/v1/reportes/**
           filters:
@@ -184,7 +184,7 @@ spring:
 
         # REPORTE DOCS
         - id: service-reportes-docs
-          uri: http://localhost:8091
+          uri: http://localhost:8092
           predicates:
             - Path=/api/v1/reportes/v3/api-docs
 

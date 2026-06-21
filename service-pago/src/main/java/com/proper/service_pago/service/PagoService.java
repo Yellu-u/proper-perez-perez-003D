@@ -1,6 +1,7 @@
 package com.proper.service_pago.service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,7 +59,53 @@ public class PagoService
                         pago.setEstadoPago(estadoPago);
                         pago.setMetodoPago(metodoPago);
 
-                        return pagoRepository.save(pago);
+                        Pago pagoGuardado = pagoRepository.save(pago);
+
+                        if ("PAGADO".equalsIgnoreCase(estadoPago)) 
+                        {
+                                try {
+                                        String jsonPedido = webClientBuilder.build()
+                                        .get()
+                                        .uri("http://localhost:8085/api/v1/pedido/" + pedidoId)
+                                        .retrieve()
+                                        .bodyToMono(String.class)
+                                        .block();
+
+                                        
+                                        Long clienteId = null;
+                                        if (jsonPedido != null && jsonPedido.contains("\"clienteId\":")) {
+                                                String[] partes = jsonPedido.split("\"clienteId\":");
+                                                String valor = partes[1].split(",")[0].replaceAll("[^0-9]", "").trim();
+                                                clienteId = Long.valueOf(valor);
+                                        }
+
+                                        if (clienteId != null) {
+                                                Map<String, Object> factura = Map.of(
+                                                        "total", pagoGuardado.getMonto(),
+                                                        "fechaFacturacion", java.time.LocalDate.now().toString(), // Solución al @NotNull de Facturación
+                                                        "estado", "EMITIDA",
+                                                        "pedidoId", pedidoId,
+                                                        "clienteId", clienteId,
+                                                        "pagoId", pagoGuardado.getPagoId()
+                                                );
+
+                                                // Enviamos el POST al microservicio de Facturación
+                                                webClientBuilder.build()
+                                                .post()
+                                                .uri("http://localhost:8089/api/v1/facturacion")
+                                                .bodyValue(factura)
+                                                .retrieve()
+                                                .bodyToMono(String.class)
+                                                .block();
+                                                
+                                        }
+                                        
+                                } catch (Exception e) {
+                                       
+                                }
+                        }
+
+                        return pagoGuardado;
                 }
                 return null;
         }
@@ -69,9 +116,9 @@ public class PagoService
 
                 if(pago != null)
                 {
-                pago.setMonto(nuevoMonto);
+                        pago.setMonto(nuevoMonto);
 
-                return pagoRepository.save(pago);
+                        return pagoRepository.save(pago);
                 }
 
                 return null;
@@ -93,14 +140,18 @@ public class PagoService
         {
                 if(pago.getPedidoId() != null)
                 {
-                        Object pedido = webClientBuilder.build()
-                        .get()
-                        .uri("http://localhost:8085/api/v1/pedido/" + pago.getPedidoId())
-                        .retrieve()
-                        .bodyToMono(Object.class)
-                        .block();
+                        try {
+                                Object pedido = webClientBuilder.build()
+                                .get()
+                                .uri("http://localhost:8085/api/v1/pedido/" + pago.getPedidoId()) 
+                                .retrieve()
+                                .bodyToMono(Object.class)
+                                .block();
 
-                        pago.setPedido(pedido);
+                                pago.setPedido(pedido);
+                        } catch (Exception e) {
+                                pago.setPedido(null);
+                        }
                 }
                 return pago;
         }

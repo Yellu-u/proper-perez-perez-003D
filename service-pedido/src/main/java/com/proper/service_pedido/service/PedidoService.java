@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -79,8 +78,24 @@ public class PedidoService
                                 detalle.setSubtotal(detalle.getCantidad() * detalle.getPrecioUnitario());
                         }
                 }
+                
                 //Guardamos primero el pedido 
                 Pedido pedidoGuardado = pedidoRepository.save(pedido);
+
+
+                // AUTOMATIZACIÓN DE STOCK: Comunicación con Microservicio Inventario
+                if (pedidoGuardado.getDetalles() != null) {
+                        for(DetallePedido detalle : pedidoGuardado.getDetalles()) {
+                                webClientBuilder.build()
+                                .put()
+                                .uri("http://localhost:8088/api/v1/inventario/producto/" 
+                                     + detalle.getProductoId() + "/descontar?cantidad=" 
+                                     + detalle.getCantidad() + "&pedidoId=" + pedidoGuardado.getPedidoId())
+                                .retrieve()
+                                .bodyToMono(Object.class)
+                                .block();
+                        }
+                }
 
                 //Calculamos el total del pedido
                 double total = 0;
@@ -208,7 +223,6 @@ public class PedidoService
                         {
                                 for(DetallePedido detalle : pedido.getDetalles())
                                 {
-                                        
                                         detalle.setPedido(pedidoCreado);
 
                                         //Buscamos producto desde otro microservicio
@@ -231,6 +245,17 @@ public class PedidoService
                                         detalle.setSubtotal(detalle.getCantidad() * detalle.getPrecioUnitario());
 
                                         pedidoCreado.getDetalles().add(detalle);
+
+                                        //Descontar nuevas cantidades en inventario
+                                        webClientBuilder.build()
+                                        .put()
+                                        .uri("http://localhost:8088/api/v1/inventario/producto/" 
+                                             + detalle.getProductoId() + "/descontar?cantidad=" 
+                                             + detalle.getCantidad() + "&pedidoId=" + pedidoCreado.getPedidoId())
+                                        .retrieve()
+                                        .bodyToMono(Object.class)
+                                        .block();
+                                        
                                 }
                         }
                         //Guardamos pedido actualizado
@@ -255,7 +280,7 @@ public class PedidoService
                         webClientBuilder.build()
                         .put()
                         .uri("http://localhost:8086/api/v1/bonificaciones/pedido/"
-                                + pedidoActualizado.getPedidoId())
+                                        + pedidoActualizado.getPedidoId())
                         .bodyValue(bonificacion)
                         .retrieve()
                         .bodyToMono(Object.class)
@@ -263,7 +288,7 @@ public class PedidoService
 
                         //Objeto para actualizar pago
                         Map<String, Object> pago = Map.of(
-                                "monto", total
+                                        "monto", total
                         );
 
                         webClientBuilder.build()

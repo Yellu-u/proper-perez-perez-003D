@@ -6,13 +6,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import com.proper.service_auth.dto.AuthRequest;
 import com.proper.service_auth.model.Usuario;
 import com.proper.service_auth.service.AuthService;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
@@ -21,7 +21,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 public class AutenticacionController {
     @Autowired
     private AuthService authService;
-    @Operation(summary = "Registrar un nuevo suario",description = "Guarda el usuario con la contraseña encriptada")
+    @Operation(summary = "Registrar un nuevo usuario",description = "Guarda el usuario con la contraseña encriptada")
     @PostMapping("/registrar")
     public ResponseEntity<String> registrar(@RequestBody Usuario usuario)
     {

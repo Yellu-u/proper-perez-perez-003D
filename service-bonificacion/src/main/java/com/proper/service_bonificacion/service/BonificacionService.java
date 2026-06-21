@@ -11,7 +11,8 @@ import com.proper.service_bonificacion.model.Bonificacion;
 import com.proper.service_bonificacion.repository.BonificacionRepository;
 
 @Service
-public class BonificacionService {
+public class BonificacionService 
+{
 
     @Autowired
     private BonificacionRepository bonificacionRepository;
@@ -21,51 +22,44 @@ public class BonificacionService {
 
     
 
-    public List<Bonificacion> listarTodas(){
-        return bonificacionRepository.findAll();
+    public List<Bonificacion> listarTodas()
+    {
+        List<Bonificacion> lista = bonificacionRepository.findAll();
+
+        for(Bonificacion bonificacion : lista)
+        {
+            enriquecerConPedidoYVendedor(bonificacion);
+        }
+
+        return lista;
     }
 
 
     //Obtener pedido por Id
     public Optional<Bonificacion> buscarPorId(Long id)
     {
-        return bonificacionRepository.findById(id).map(this::enriquecerConPedidoYVendedor);
+        Optional<Bonificacion> bonificacion = bonificacionRepository.findById(id);
 
+        if(bonificacion.isPresent())
+        {
+            enriquecerConPedidoYVendedor(bonificacion.get());
+        }
+
+        return bonificacion;
     }
 
 
-    public Bonificacion guardarBonificacion(Bonificacion bonificacion){
-    
-        //Se valida si el Vendedor Existe antes de guardar
-        if(bonificacion.getVendedorId()!=null){
-            Object vendedor = webClientBuilder.build()
-                .get()
-                .uri("http://localhost:8084/api/v1/vendedores/" + bonificacion.getVendedorId())
-                .retrieve()
-                .bodyToMono(Object.class)
-                .block();
-            bonificacion.setVendedor(vendedor);
-        }
-
-        //Se valida si el Pedido Existe antes de guardar
-        if (bonificacion.getPedidoId()!= null){
-            Object pedido = webClientBuilder.build()
-                .get()
-                .uri("http://localhost:8087/api/v1/pedidos/" + bonificacion.getPedidoId())
-                .retrieve()
-                .bodyToMono(Object.class)
-                .block();
-            bonificacion.setPedido(pedido);
-        }
-
-        //Guarda y Devuelve la bonificacion enriquecida
+    public Bonificacion guardarBonificacion(Bonificacion bonificacion)
+    {
         return bonificacionRepository.save(bonificacion);
     }
 
     
     //Enriquecer los datos 
-    private Bonificacion enriquecerConPedidoYVendedor(Bonificacion bonificacion) {
-        if (bonificacion.getVendedorId() != null) {
+    private Bonificacion enriquecerConPedidoYVendedor(Bonificacion bonificacion) 
+    {
+        if (bonificacion.getVendedorId() != null) 
+        {
             Object vendedor = webClientBuilder.build()
                 .get()
                 .uri("http://localhost:8084/api/v1/vendedores/" + bonificacion.getVendedorId())
@@ -74,10 +68,11 @@ public class BonificacionService {
                 .block();
             bonificacion.setVendedor(vendedor);
         }
-        if (bonificacion.getPedidoId() != null) {
+        if (bonificacion.getPedidoId() != null) 
+        {
             Object pedido = webClientBuilder.build()
                 .get()
-                .uri("http://localhost:8087/api/v1/pedidos/" + bonificacion.getPedidoId())
+                .uri("http://localhost:8085/api/v1/pedido/" + bonificacion.getPedidoId())
                 .retrieve()
                 .bodyToMono(Object.class)
                 .block();
@@ -87,12 +82,29 @@ public class BonificacionService {
         return bonificacion;
     }
 
-    //Guardar pedido 
+    //Actualizamos bonificación por pedido
+    public Bonificacion actualizarPorPedidoId(Long pedidoId, Double nuevoMonto)
+    {
+        Bonificacion bonificacion = bonificacionRepository.findByPedidoId(pedidoId);
 
+        if(bonificacion != null)
+        {
+            bonificacion.setMonto(nuevoMonto);
 
-    public void eliminar(Long bonificacionId) {
-        bonificacionRepository.deleteById(bonificacionId);
+            return bonificacionRepository.save(bonificacion);
+        }
+
+        return null;
+    }   
+
+    //eliminamos bonificación
+    public void eliminar(Long pedidoId) 
+    {
+        Bonificacion bonificacion = bonificacionRepository.findByPedidoId(pedidoId);
+
+        if(bonificacion != null)
+        {
+            bonificacionRepository.delete(bonificacion);
+        }
     }
-
-
 }

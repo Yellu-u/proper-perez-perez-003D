@@ -7,5 +7,5 @@ import com.proper.service_cliente.model.Cliente;
 @Repository
 public interface ClienteRepository extends JpaRepository<Cliente,Long> 
 {
-    Cliente findByRunCliente(String runCliente);
+    Cliente findByClienteId(Long clienteId);
 }

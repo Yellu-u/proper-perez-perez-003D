@@ -2,6 +2,53 @@
     "configurations": [
         {
             "type": "java",
+            "name": "ServiceDespachoApplication",
+            "request": "launch",
+            "mainClass": "com.proper.service_despacho.ServiceDespachoApplication",
+            "projectName": "service-despacho",
+            "vmArgs": " -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=60051 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dspring.jmx.enabled=true -Djava.rmi.server.hostname=localhost -Dspring.application.admin.enabled=true -Dspring.boot.project.name=service-despacho"
+        },
+        {
+            "type": "java",
+            "name": "ServicePagoApplication",
+            "request": "launch",
+            "mainClass": "com.proper.service_pago.ServicePagoApplication",
+            "projectName": "service-pago",
+            "vmArgs": " -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=56294 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dspring.jmx.enabled=true -Djava.rmi.server.hostname=localhost -Dspring.application.admin.enabled=true -Dspring.boot.project.name=service-pago"
+        },
+        {
+            "type": "java",
+            "name": "ApiGatewayApplication",
+            "request": "launch",
+            "mainClass": "com.proper.api_gateway.ApiGatewayApplication",
+            "projectName": "api-gateway"
+        },
+        {
+            "type": "java",
+            "name": "ServiceBonificacionApplication",
+            "request": "launch",
+            "mainClass": "com.proper.service_bonificacion.ServiceBonificacionApplication",
+            "projectName": "service-bonificacion",
+            "vmArgs": " -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=60056 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dspring.jmx.enabled=true -Djava.rmi.server.hostname=localhost -Dspring.application.admin.enabled=true -Dspring.boot.project.name=service-bonificacion"
+        },
+        {
+            "type": "java",
+            "name": "ServiceProductosApplication",
+            "request": "launch",
+            "mainClass": "com.proper.service_productos.ServiceProductosApplication",
+            "projectName": "service-productos",
+            "vmArgs": " -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=60037 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dspring.jmx.enabled=true -Djava.rmi.server.hostname=localhost -Dspring.application.admin.enabled=true -Dspring.boot.project.name=service-productos"
+        },
+        {
+            "type": "java",
+            "name": "ServicePedidoApplication",
+            "request": "launch",
+            "mainClass": "com.proper.service_pedido.ServicePedidoApplication",
+            "projectName": "service-pedido",
+            "vmArgs": " -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=60041 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dspring.jmx.enabled=true -Djava.rmi.server.hostname=localhost -Dspring.application.admin.enabled=true -Dspring.boot.project.name=service-pedido"
+        },
+        {
+            "type": "java",
             "name": "Spring Boot-ServiceClienteApplication<service-cliente>",
             "request": "launch",
             "cwd": "${workspaceFolder}",
@@ -18,6 +65,49 @@
             "cwd": "${workspaceFolder}",
             "mainClass": "com.proper.service_vendedor.ServiceVendedorApplication",
             "projectName": "service-vendedor",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env",
+            "vmArgs": " -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=60032 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dspring.jmx.enabled=true -Djava.rmi.server.hostname=localhost -Dspring.application.admin.enabled=true -Dspring.boot.project.name=service-vendedor"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-ServiceInventarioApplication<service-inventario>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.proper.service_inventario.ServiceInventarioApplication",
+            "projectName": "service-inventario",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env",
+            "vmArgs": " -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=60046 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dspring.jmx.enabled=true -Djava.rmi.server.hostname=localhost -Dspring.application.admin.enabled=true -Dspring.boot.project.name=service-inventario"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-ServiceFacturacionApplication<service-facturacion>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.proper.service_facturacion.ServiceFacturacionApplication",
+            "projectName": "service-facturacion",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env",
+            "vmArgs": " -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=60048 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dspring.jmx.enabled=true -Djava.rmi.server.hostname=localhost -Dspring.application.admin.enabled=true -Dspring.boot.project.name=service-facturacion"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-ServiceReporteApplication<service-reporte>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.proper.service_reporte.ServiceReporteApplication",
+            "projectName": "service-reporte",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-ServiceAuthApplication<service-auth>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.proper.service_auth.ServiceAuthApplication",
+            "projectName": "service-auth",
             "args": "",
             "envFile": "${workspaceFolder}/.env"
         }

@@ -7,5 +7,5 @@ import com.proper.service_cliente.model.Empresa;
 @Repository
 public interface EmpresaRepository extends JpaRepository<Empresa,Long> 
 {
-
+        Empresa findByEmpresaId(Long empresaId);
 }

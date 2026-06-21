@@ -12,6 +12,19 @@ spring:
       discovery:
         locator:
           enabled: true
+
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowed-origins: "http://localhost:9090"
+            allowed-methods:
+            - GET
+            - POST
+            - PUT
+            - DELETE 
+            - OPTIONS
+            allowed-headers: "*"
+            
       routes:
         # 1. RUTA DE AUTH: Libre para Login/Registro
         - id: auth-service
@@ -27,6 +40,11 @@ spring:
           filters:
             - AuthenticationFilter
 
+        # PRODUCTOS DOCS
+        - id: service-productos-docs
+          uri: http://localhost:8082
+          predicates:
+            - Path=/api/v1/productos/v3/api-docs
 
         # RUTA SERVICIO DE LINEA (dentro de producto)
         - id: service-linea
@@ -36,7 +54,6 @@ spring:
           filters:
             - AuthenticationFilter
 
-
         # RUTA SERVICIO DE CLIENTES
         - id: service-cliente
           uri: http://localhost:8083
@@ -45,6 +62,11 @@ spring:
           filters:
             - AuthenticationFilter
 
+        # CLIENTES DOCS
+        - id: service-clientes-docs
+          uri: http://localhost:8083
+          predicates:
+            - Path=/api/v1/clientes/v3/api-docs
 
         # RUTA SERVICIO DE EMPRESAS (dentro de cliente)
         - id: service-empresas
@@ -62,6 +84,11 @@ spring:
           filters:
             - AuthenticationFilter
 
+        # VENDEDORES DOCS
+        - id: service-vendedores-docs
+          uri: http://localhost:8084
+          predicates:
+            - Path=/api/v1/vendedores/v3/api-docs
 
         # RUTA SERVICIO PEDIDO
         - id: service-pedido
@@ -71,6 +98,11 @@ spring:
           filters:
             - AuthenticationFilter
 
+        # PEDIDO DOCS
+        - id: service-pedido-docs
+          uri: http://localhost:8085
+          predicates:
+            - Path=/api/v1/pedido/v3/api-docs
 
         # RUTA SERVICIO BONIFICACION
         - id: service-bonificacion
@@ -80,6 +112,11 @@ spring:
           filters:
             - AuthenticationFilter
 
+        # BONIFICACION DOCS
+        - id: service-bonificacion-docs
+          uri: http://localhost:8086
+          predicates:
+            - Path=/api/v1/bonificaciones/v3/api-docs
 
         # RUTA SERVICIO PAGO
         - id: service-pago
@@ -89,6 +126,11 @@ spring:
           filters:
             - AuthenticationFilter
 
+        # PAGO DOCS
+        - id: service-pagos-docs
+          uri: http://localhost:8087
+          predicates:
+            - Path=/api/v1/pagos/v3/api-docs
 
         # RUTA SERVICIO INVENTARIO
         - id: service-inventario
@@ -98,6 +140,11 @@ spring:
           filters:
             - AuthenticationFilter
 
+        # INVENTARIO DOCS
+        - id: service-inventario-docs
+          uri: http://localhost:8088
+          predicates:
+            - Path=/api/v1/inventario/v3/api-docs
         
         # RUTA SERVICIO FACTURACIÓN
         - id: service-facturacion
@@ -107,6 +154,11 @@ spring:
           filters:
             - AuthenticationFilter
 
+        # FACTURACIÓN DOCS
+        - id: service-facturacion-docs
+          uri: http://localhost:8089
+          predicates:
+            - Path=/api/v1/facturacion/v3/api-docs
 
         # RUTA SERVICIO DESPACHO
         - id: service-despacho
@@ -116,6 +168,11 @@ spring:
           filters:
             - AuthenticationFilter
 
+        # DESPACHO DOCS
+        - id: service-despacho-docs
+          uri: http://localhost:8090
+          predicates:
+            - Path=/api/v1/despachos/v3/api-docs
 
         # RUTA SERVICIO REPORTE
         - id: service-reportes
@@ -124,6 +181,12 @@ spring:
             - Path=/api/v1/reportes/**
           filters:
             - AuthenticationFilter
+
+        # REPORTE DOCS
+        - id: service-reportes-docs
+          uri: http://localhost:8091
+          predicates:
+            - Path=/api/v1/reportes/v3/api-docs
 
 
 # Configuraciones externas al bloque 'spring'

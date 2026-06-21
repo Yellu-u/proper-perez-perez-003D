@@ -11,14 +11,18 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 import java.nio.charset.StandardCharsets;
+
 @Component
 public class AuthenticationFilter extends AbstractGatewayFilterFactory<AuthenticationFilter.Config>{
+    
     @Value("${jwt.secret}")
     private String secreto;
+    
     public AuthenticationFilter()
     {
         super(Config.class);
     }
+    
     public static class Config
     {
         // Config adicional si fuese necesaria para en un futuro
@@ -29,6 +33,16 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
     {
         return (exchange, chain) -> 
         {
+            // 1. OBTENER LA RUTA DE LA PETICIÓN ACTUAL
+            String path = exchange.getRequest().getURI().getPath();
+
+            // 2. LISTA BLANCA: Si es una petición de documentación, dejar pasar sin validar Token
+            if (path.contains("v3/api-docs") || path.contains("swagger-ui")) {
+                return chain.filter(exchange);
+            }
+
+            // --- A partir de aquí sigue tu lógica normal con Token JWT ---
+
             // Obtener la cabecera Authorization
             String authHeader = exchange.getRequest().getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
 
@@ -53,10 +67,12 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
                 // Si el token expiró o la firma no coincide
                 return onError(exchange, "Token inválido o expirado", HttpStatus.UNAUTHORIZED);
             }
-             // Si todo está bien, continuar al microservicio
+            
+            // Si todo está bien, continuar al microservicio
             return chain.filter(exchange);
         };
     }
+    
     private Mono<Void> onError(ServerWebExchange exchange, String err, HttpStatus httpStatus) 
     {
         exchange.getResponse().setStatusCode(httpStatus);

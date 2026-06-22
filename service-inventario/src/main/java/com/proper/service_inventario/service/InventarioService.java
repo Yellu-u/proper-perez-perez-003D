@@ -109,4 +109,6 @@ public class InventarioService {
         System.out.println("Inventarios encontrados: " + inventarios.size());
         inventarioRepository.deleteAll(inventarios);
     }
+
+    
 }

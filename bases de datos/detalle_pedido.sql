@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 15-05-2026 a las 04:12:24
+-- Tiempo de generación: 22-06-2026 a las 02:20:09
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -41,14 +41,13 @@ CREATE TABLE `detalle_pedido` (
 --
 
 INSERT INTO `detalle_pedido` (`detalle_id`, `cantidad`, `precio_unitario`, `producto_id`, `subtotal`, `pedido_id`) VALUES
-(1, 5, 1500, 1, 7500, 1),
-(2, 2, 2000, 4, 4000, 1),
-(3, 10, 1200, 8, 12000, 2),
-(4, 3, 2500, 10, 7500, 2),
-(5, 7, 1600, 6, 11200, 3),
-(9, 12, 1800, 2, 21600, 4),
-(10, 4, 2200, 5, 8800, 4),
-(11, 10, 2400, 11, 24000, 4);
+(1, 5, 1500, 1, 7500, 6),
+(2, 10, 1800, 2, 18000, 7),
+(3, 8, 1500, 1, 12000, 8),
+(4, 4, 1200, 3, 4800, 8),
+(5, 12, 1800, 2, 21600, 9),
+(6, 20, 1500, 1, 30000, 10),
+(7, 10, 1800, 2, 18000, 10);
 
 --
 -- Índices para tablas volcadas
@@ -69,7 +68,7 @@ ALTER TABLE `detalle_pedido`
 -- AUTO_INCREMENT de la tabla `detalle_pedido`
 --
 ALTER TABLE `detalle_pedido`
-  MODIFY `detalle_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `detalle_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- Restricciones para tablas volcadas

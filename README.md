@@ -13,32 +13,55 @@ Sistema desarrollado mediante arquitectura de microservicios para gestionar:
 - Bonificaciones
 - Vendedores
 - Pagos
+- Inventario
+- Facturación
+- Despachos
+- Reportes
 
 ---
 
 # 💻 Tecnologías Utilizadas
+
 | Categoría | Tecnologías |
 |---|---|
-| 🔧 Backend | Java 21, Spring Boot, Maven, WebClient |
-| 🗄️ Base de Datos | MySQL, Oracle SQL Developer Data Modeler, XAMPP |
-| 👥 Desarrollo Colaborativo / Entorno de Desarrollo | Git, GitHub, Visual Studio Code |
-| 🧪 Testing y APIs | Postman, APIs REST / JSON |
+| 🔧 **Backend & Microservicios** | Java 21, Spring Boot 3.x, Spring Cloud Gateway (API Gateway), Spring Data JPA (Hibernate), Maven, Spring WebFlux (`WebClient`), Lombok |
+| 🗄️ **Base de Datos** | MySQL, Oracle SQL Developer Data Modeler, XAMPP (phpMyAdmin) |
+| 👥 **Entorno y Control** | Git, GitHub, Visual Studio Code |
+| 🧪 **Testing y Documentación** | Postman, Swagger / OpenAPI 3 (Documentación de APIs), APIs REST / JSON |
+
 ---
 
 # 🧩 Microservicios
 | Microservicio | Puerto |
 |---|---|
+| service-auth | 8081 |
 | service-productos | 8082 |
 | service-cliente | 8083 |
 | service-vendedor | 8084 |
 | service-pedido | 8085 |
 | service-bonificacion | 8086 |
-| service-bonificacion | 8087 |
+| service-pago | 8087 |
+| service-inventario | 8088 |
+| service-facturacion | 8089 |
+| service-despacho | 8090 |
+| service-reporte | 8091 |
 | api-gateway | 9090 |
 
 ---
 
 # 🔌 Endpoints Principales
+
+## Service-Auth
+### Autenticación
+
+```http://localhost:8081/auth/registrar```
+
+```http://localhost:8081/auth/login```
+
+| Método | Endpoint | Descripción |
+|---|---|---|
+| POST | /auth/registrar | Registrar usuario |
+| POST | /auth/login | Iniciar sesión y obtener token JWT |
 
 ## Service-Producto
 ### Productos
@@ -153,74 +176,241 @@ Sistema desarrollado mediante arquitectura de microservicios para gestionar:
 
 > Al eliminar un pedido, el pago asociado también se elimina automáticamente.
 
+## Service-Inventario
+### Inventario
+
+```http://localhost:8088/api/v1/inventario```
+
+```http://localhost:8088/api/v1/inventario/{id}```
+
+| Método | Endpoint | Descripción |
+|---|---|---|
+| GET | /api/v1/inventario | Obtener todo el inventario |
+| GET | /api/v1/inventario/{id} | Obtener registro de inventario por ID |
+| GET | /api/v1/inventario/producto/{productoId} | Obtener inventario por ID de producto |
+| POST | /api/v1/inventario | Crear registro de inventario |
+| PUT | /api/v1/inventario/{id} | Actualizar inventario |
+| PUT | /api/v1/inventario/producto/{productoId}/descontar | Descontar stock de un producto |
+| DELETE | /api/v1/inventario/{id} | Eliminar registro de inventario |
+| DELETE | /api/v1/inventario/producto/{productoId} | Eliminar inventario asociado a un producto |
+
+> El inventario permite controlar el stock disponible de cada producto.
+
+> Cada registro se encuentra asociado a un producto mediante su identificador.
+
+> El sistema permite descontar existencias en función de los pedidos realizados.
+
+> Se almacena la fecha de última actualización para facilitar el seguimiento de movimientos de stock.
+
+## Service-Facturacion
+### Facturación
+
+```http://localhost:8089/api/v1/facturacion```
+
+```http://localhost:8089/api/v1/facturacion/{id}```
+
+| Método | Endpoint | Descripción |
+|---|---|---|
+| GET | /api/v1/facturacion | Obtener facturas |
+| GET | /api/v1/facturacion/{id} | Obtener factura por ID |
+| POST | /api/v1/facturacion | Generar factura |
+| PUT | /api/v1/facturacion/{id} | Actualizar factura |
+| DELETE | /api/v1/facturacion/{id} | Eliminar factura |
+
+> Al momento en que un pedido pasa a **PAGADO**, la facturación se crea automáticamente
+
+## Service-Despacho
+### Despachos
+
+```http://localhost:8090/api/v1/despachos```
+
+```http://localhost:8090/api/v1/despachos/{id}```
+
+| Método | Endpoint | Descripción |
+|---|---|---|
+| GET | /api/v1/despachos | Obtener todos los despachos |
+| GET | /api/v1/despachos/{id} | Obtener despacho por ID |
+| POST | /api/v1/despachos | Crear despacho |
+| PUT | /api/v1/despachos/pedido/{pedidoId}/estado | Actualizar estado de despacho |
+| DELETE | /api/v1/despachos/pedido/{pedidoId} | Eliminar despacho asociado a un pedido |
+
+> Los despachos se generan automáticamente al crear un pedido.
+
+> La dirección de entrega se obtiene desde la empresa asociada al cliente.
+
+> La fecha estimada de entrega se calcula automáticamente.
+
+## Service-Reporte
+### Reportes
+
+```http://localhost:8091/api/v1/reportes```
+
+```http://localhost:8091/api/v1/reportes/{id}```
+
+| Método | Endpoint | Descripción |
+|---|---|---|
+| GET | /api/v1/reportes | Obtener reportes generados |
+| GET | /api/v1/reportes/{id} | Obtener reporte por ID |
+| POST | /api/v1/reportes/generar | Generar reporte por rango de fechas |
+| DELETE | /api/v1/reportes/{id} | Eliminar reporte |
+
+> Los reportes consolidan información de pedidos, pagos, bonificaciones y despachos.
+
+> Incluyen estadísticas de desempeño por vendedor.
+
+> Los reportes almacenan el período analizado mediante fechaInicio y fechaFin.
+
 ## API Gateway
 ``` http://localhost:9090/api/v1/ ```
 
 ---
 # 🔗 Principales Funcionalidades
 
-- CRUD de productos  
-- CRUD de clientes  
+- CRUD de productos
+- CRUD de líneas de productos
+- CRUD de clientes
+- CRUD de empresas
 - CRUD de vendedores
 - CRUD de pedidos
-- Cálculo automático de subtotales  
-- Generación automática de bonificaciones  
+- Gestión de inventario
+- Gestión de pagos
+- Gestión de despachos
+- Gestión de facturación
+- Generación de reportes comerciales
+- Autenticación mediante JWT
+- Cálculo automático de subtotales
+- Generación automática de bonificaciones
 - Generación automática de pagos
-- Comunicación entre microservicios
+- Generación automática de despachos
+- Actualización automática de inventario
+- Estadísticas por vendedor
+- Comunicación entre microservicios mediante WebClient
 
 ---
 # ⚙️ Requisitos Previos
 
-Antes de ejecutar el proyecto, es obligatorio contar con los siguientes programas instalados:
-- Java JDK 21
-- XAMPP
-- Visual Studio Code
-- Postman
-- Git
-- Apache Maven
+Antes de ejecutar el proyecto, es necesario contar con las siguientes herramientas instaladas:
 
-Además, se recomienda configurar correctamente las variables de entorno de Java y Maven.
+## Software
+
+- Java JDK 21
+- Apache Maven 3.9 o superior
+- MySQL Server 8.x
+- XAMPP (opcional para administración mediante phpMyAdmin)
+- Git
+- Visual Studio Code o IntelliJ IDEA
+- Postman
+
+## Dependencias utilizadas
+
+- Spring Boot 3.x
+- Spring Data JPA
+- Spring Web
+- Spring WebFlux (WebClient)
+- Spring Security
+- JWT (JSON Web Token)
+- Lombok
+- Hibernate
+- MySQL Connector
+- Spring Cloud Gateway
+- OpenAPI / Swagger
+
 --- 
-# ▶️ Ejecución del Proyecto 
+# ▶️ Ejecución del Proyecto
+
 Luego de clonar el proyecto desde GitHub y contar con las tecnologías necesarias instaladas, se deben seguir los siguientes pasos:
 
 ## 1. Iniciar XAMPP
+
 Abrir XAMPP y activar los módulos:
+
 - Apache
 - MySQL
-Posteriormente, presionar el botón **Admin** de MySQL para acceder a phpMyAdmin
+
+Posteriormente, presionar el botón **Admin** de MySQL para acceder a phpMyAdmin.
 
 ## 2. Ejecutar todos los microservicios
+
 Levantar todos los microservicios Spring Boot junto con el API Gateway para permitir la correcta comunicación entre servicios.
 
 ### Puertos utilizados:
+
 | Servicio | Puerto |
 |---|---|
-| API Gateway | 9090 |
+| service-auth | 8081 |
 | service-productos | 8082 |
 | service-cliente | 8083 |
 | service-vendedor | 8084 |
 | service-pedido | 8085 |
 | service-bonificacion | 8086 |
 | service-pago | 8087 |
+| service-inventario | 8088 |
+| service-facturacion | 8089 |
+| service-despacho | 8090 |
+| service-reporte | 8091 |
+| API Gateway | 9090 |
 
 ## 3. Importar Bases de Datos
+
 Este paso es opcional, ya que el proyecto incluye scripts SQL con bases de datos previamente pobladas para facilitar las pruebas.
 
 Para importarlas:
 
 1. Ingresar a:
-```txt
-http://localhost/phpmyadmin/
-```
+
+```http://localhost/phpmyadmin/```
 
 2. Crear las bases de datos correspondientes.
 
 3. Importar cada archivo `.sql` entregado en el proyecto.
 
-## 4. Probar Endpoints en Postman
+## 4. Registrar Usuario e Iniciar Sesión
+
+Antes de acceder a los endpoints protegidos, se debe registrar un usuario mediante el microservicio de autenticación.
+
+### Registrar Usuario
+
+```POST http://localhost:8081/auth/registrar```
+
+### Iniciar Sesión
+
+```POST http://localhost:8081/auth/login```
+
+El sistema retornará un token JWT que podrá ser utilizado para acceder a los recursos protegidos.
+
+## 5. Probar Endpoints
+
 Abrir Postman y utilizar los endpoints documentados anteriormente para comprobar el correcto funcionamiento de los microservicios y la comunicación entre ellos.
 
+Se recomienda utilizar el API Gateway para centralizar las solicitudes:
+
+```http://localhost:9090/```
+
+A través de las pruebas es posible validar:
+
+- Gestión de productos y líneas
+- Gestión de clientes y empresas
+- Gestión de vendedores
+- Gestión de pedidos
+- Generación automática de bonificaciones
+- Generación automática de pagos
+- Gestión de inventario y control de stock
+- Generación automática de despachos
+- Gestión de facturación
+- Generación de reportes comerciales
+- Estadísticas por vendedor
+- Comunicación entre microservicios mediante WebClient
+- Autenticación mediante JWT
+
+## 6. Acceder a Swagger
+
+Cada microservicio dispone de documentación Swagger/OpenAPI para facilitar la visualización y prueba de los endpoints.
+
+Ejemplos:
+
+```http://localhost:9090/swagger-ui.html```
+
+Swagger permite probar los endpoints directamente desde el navegador sin necesidad de utilizar herramientas externas.
 ---
 
 # 🧪 Datos de Prueba
@@ -314,9 +504,74 @@ Abrir Postman y utilizar los endpoints documentados anteriormente para comprobar
 
 > Las bonificaciones se generan automáticamente al crear un pedido.
 
+---
+
 ## Pago
 
 > Los pagos se generan automáticamente al crear un pedido.
+
+---
+
+## Inventario
+
+```json
+{
+  "stockActual": 100,
+  "stockMinimo": 20,
+  "fechaActualizacion": "2026-06-21",
+  "productoId": 1,
+  "pedidoId": null
+}
+```
+
+---
+
+## Facturación
+
+> Las facturas pueden generarse a partir de los pagos registrados en el sistema.
+
+---
+
+## Despacho
+
+> Los despachos se generan automáticamente al crear un pedido.
+
+---
+
+## Reporte
+
+```json
+{
+  "fechaInicio": "2026-06-01",
+  "fechaFin": "2026-06-30"
+}
+```
+
+> Este JSON se utiliza para generar un reporte mediante:
+
+```POST /api/v1/reportes/generar```
+
+---
+
+## Usuario (Auth)
+### Registro
+
+```json
+{
+  "nombreUsuario": "admin",
+  "contrasena": "123456"
+}
+```
+
+### Login
+
+```json
+{
+  "nombreUsuario": "admin",
+  "contrasena": "123456"
+}
+```
+
 ---
 # 👥 Integrantes
 - Josefina Isidora Pérez Huerta

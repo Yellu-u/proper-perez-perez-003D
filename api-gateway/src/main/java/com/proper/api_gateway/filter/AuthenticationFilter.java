@@ -51,6 +51,11 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
                 return chain.filter(exchange);
             }
 
+            // Catálogo público: la tienda se puede ver sin iniciar sesión
+            if (HttpMethod.GET.equals(method) && path.startsWith("/api/v1/productos")) {
+                return chain.filter(exchange);
+            }
+
             // Validar cabecera Authorization
             String authHeader = exchange.getRequest().getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
             if (authHeader == null || !authHeader.startsWith("Bearer ")) {

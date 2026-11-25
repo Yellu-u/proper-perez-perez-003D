@@ -75,10 +75,6 @@ public class ProductosServiceTest {
         
         // Creamos los objetos simulados respetando las variables exactas de tus entidades
         Linea lineaMock = new Linea(3L, "Linea Casino y Restaurant");
-        Producto productoMock = new Producto(productoId, "Detergente cachupin", 1450.50f, lineaMock);
-
-        // Comportamiento de la BD local
-        when(productoRepository.findById(productoId)).thenReturn(Optional.of(productoMock));
 
         // --- 2. EJECUCIÓN ---
         Optional<Producto> resultadoOptional = productoService.buscarProductoPorId(productoId);

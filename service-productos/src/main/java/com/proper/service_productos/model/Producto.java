@@ -1,5 +1,6 @@
 package com.proper.service_productos.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -21,8 +22,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @AllArgsConstructor
 @NoArgsConstructor
 @Schema(description = "Entidad que representa un Producto dentro del sistema")
-public class Producto 
-{
+public class Producto {
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         @Schema(description = "ID único autoincremental del producto", example = "1")
@@ -35,9 +35,18 @@ public class Producto
         @NotNull(message = "El precio no puede estar vacío")
         @Schema(description = "Precio unitario del producto en valor flotante", example = "1450.50", requiredMode = Schema.RequiredMode.REQUIRED)
         private Float precio; // Cambiado a Float objeto para permitir validación @NotNull
-        
+
         @ManyToOne(fetch = FetchType.EAGER)
         @JoinColumn(name = "lineaId")
         @Schema(description = "Línea o categoría comercial a la que pertenece el producto")
         private Linea linea;
+
+        @Column(name = "imagen")
+        private String imagen;
+
+        @Column(name = "descripcion", length = 500)
+        private String descripcion;
+
+        @Column(name = "precio_descuento")
+        private Double precioDescuento;
 }

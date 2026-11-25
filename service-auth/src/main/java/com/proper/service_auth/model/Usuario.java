@@ -3,8 +3,6 @@ package com.proper.service_auth.model;
 import java.util.HashSet;
 import java.util.Set;
 
-
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -30,27 +28,24 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString(exclude = "roles")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class Usuario 
-{
+public class Usuario {
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         @EqualsAndHashCode.Include
         private Long id;
         @Column(name = "nombre_usuario", unique = true, nullable = false)
         private String nombreUsuario;
-        
+
         @Column(name = "contrasena", nullable = false)
         private String contrasena;
 
         @Column(unique = true, nullable = false)
-        private String correo;  
+        private String correo;
+
+        @Column(name = "nombre_completo")
+        private String nombreCompleto;
 
         @ManyToMany(fetch = FetchType.EAGER)
-        @JoinTable
-        (
-                name = "usuario_roles",
-                joinColumns = @JoinColumn(name = "usuario_id"),
-                inverseJoinColumns = @JoinColumn(name = "rol_id ")
-        )
+        @JoinTable(name = "usuario_roles", joinColumns = @JoinColumn(name = "usuario_id"), inverseJoinColumns = @JoinColumn(name = "rol_id"))
         private Set<Rol> roles = new HashSet<>();
 }

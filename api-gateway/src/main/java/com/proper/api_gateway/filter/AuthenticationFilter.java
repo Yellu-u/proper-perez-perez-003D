@@ -1,80 +1,125 @@
 package com.proper.api_gateway.filter;
 
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.security.Keys;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
+
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
 import reactor.core.publisher.Mono;
-import java.nio.charset.StandardCharsets;
 
 @Component
-public class AuthenticationFilter extends AbstractGatewayFilterFactory<AuthenticationFilter.Config>{
-    
+public class AuthenticationFilter extends AbstractGatewayFilterFactory<AuthenticationFilter.Config> {
+
+    private static final String ADMIN = "ADMINISTRADOR";
+    private static final String VENDEDOR = "VENDEDOR";
+    private static final String CLIENTE = "CLIENTE";
+
     @Value("${jwt.secret}")
     private String secreto;
-    
-    public AuthenticationFilter()
-    {
+
+    public AuthenticationFilter() {
         super(Config.class);
     }
-    
-    public static class Config
-    {
-        // Config adicional si fuese necesaria para en un futuro
+
+    public static class Config {
     }
 
     @Override
-    public GatewayFilter apply(Config config) 
-    {
-        return (exchange, chain) -> 
-        {
-            // 1. OBTENER LA RUTA DE LA PETICIÓN ACTUAL
+    public GatewayFilter apply(Config config) {
+        return (exchange, chain) -> {
+            HttpMethod method = exchange.getRequest().getMethod();
             String path = exchange.getRequest().getURI().getPath();
 
-            // 2. LISTA BLANCA: Si es una petición de documentación, dejar pasar sin validar Token
-            if (path.contains("v3/api-docs") || path.contains("swagger-ui")) {
+            if (HttpMethod.OPTIONS.equals(method)) {
                 return chain.filter(exchange);
             }
 
-            // --- A partir de aquí sigue tu lógica normal con Token JWT ---
-
-            // Obtener la cabecera Authorization
-            String authHeader = exchange.getRequest().getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
-
-            // Validar que exista y tenga el formato "Bearer "
-            if (authHeader == null || !authHeader.startsWith("Bearer ")) 
-            {
-                return onError(exchange, "Token faltante o formato inválido", HttpStatus.UNAUTHORIZED);
+            // Documentación Swagger libre (solo lectura)
+            if (HttpMethod.GET.equals(method)
+                    && (path.endsWith("/v3/api-docs") || path.contains("/v3/api-docs/"))) {
+                return chain.filter(exchange);
             }
 
-            // Extraer el token (quitando "Bearer ")
+            // Validar cabecera Authorization
+            String authHeader = exchange.getRequest().getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
+            if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+                return onError(exchange, HttpStatus.UNAUTHORIZED);
+            }
+
             String token = authHeader.substring(7);
 
-            try 
-            {
-                // Validar el token con la firma
-                Jwts.parserBuilder()
-                    .setSigningKey(Keys.hmacShaKeyFor(secreto.getBytes(StandardCharsets.UTF_8)))
-                    .build()
-                    .parseClaimsJws(token);
-                
+            // Validar firma y expiración, y obtener los claims
+            Claims claims;
+            try {
+                claims = Jwts.parserBuilder()
+                        .setSigningKey(Keys.hmacShaKeyFor(secreto.getBytes(StandardCharsets.UTF_8)))
+                        .build()
+                        .parseClaimsJws(token)
+                        .getBody();
             } catch (Exception e) {
-                // Si el token expiró o la firma no coincide
-                return onError(exchange, "Token inválido o expirado", HttpStatus.UNAUTHORIZED);
+                return onError(exchange, HttpStatus.UNAUTHORIZED);
             }
-            
-            // Si todo está bien, continuar al microservicio
+
+            // Validar permisos según rol
+            List<String> roles = extraerRoles(claims);
+            if (!tienePermiso(roles, method, path)) {
+                return onError(exchange, HttpStatus.FORBIDDEN);
+            }
+
             return chain.filter(exchange);
         };
     }
-    
-    private Mono<Void> onError(ServerWebExchange exchange, String err, HttpStatus httpStatus) 
-    {
+
+    private List<String> extraerRoles(Claims claims) {
+        Object raw = claims.get("roles");
+        if (raw instanceof List<?> lista) {
+            return lista.stream().map(String::valueOf).collect(Collectors.toList());
+        }
+        return List.of();
+    }
+
+    private boolean tienePermiso(List<String> roles, HttpMethod method, String path) {
+        // El administrador tiene acceso total
+        if (roles.contains(ADMIN)) {
+            return true;
+        }
+
+        boolean esGet = HttpMethod.GET.equals(method);
+        boolean esProductos = path.startsWith("/api/v1/productos");
+        boolean esPedidos = path.startsWith("/api/v1/pedido");
+
+        // Vendedor: solo ver productos y pedidos
+        if (roles.contains(VENDEDOR) && esGet && (esProductos || esPedidos)) {
+            return true;
+        }
+
+        // Cliente: solo la tienda
+        if (roles.contains(CLIENTE)) {
+            if (esGet && esProductos) {
+                return true;
+            }
+            boolean esCrearPedido = HttpMethod.POST.equals(method)
+                    && (path.equals("/api/v1/pedido") || path.equals("/api/v1/pedido/"));
+            if (esCrearPedido) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private Mono<Void> onError(ServerWebExchange exchange, HttpStatus httpStatus) {
         exchange.getResponse().setStatusCode(httpStatus);
         return exchange.getResponse().setComplete();
     }

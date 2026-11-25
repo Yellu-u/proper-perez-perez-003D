@@ -51,8 +51,9 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
                 return chain.filter(exchange);
             }
 
-            // Catálogo público: la tienda se puede ver sin iniciar sesión
-            if (HttpMethod.GET.equals(method) && path.startsWith("/api/v1/productos")) {
+            // Catálogo se puede visualizar sin haber iniciado sesión
+            if (HttpMethod.GET.equals(method)
+                    && (path.startsWith("/api/v1/productos") || path.startsWith("/api/v1/inventario"))) {
                 return chain.filter(exchange);
             }
 

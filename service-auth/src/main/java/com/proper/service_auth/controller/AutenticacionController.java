@@ -4,11 +4,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.proper.service_auth.dto.ActualizarPerfilRequest;
 import com.proper.service_auth.dto.AuthRequest;
+import com.proper.service_auth.dto.CambiarContrasenaRequest;
 import com.proper.service_auth.dto.RegistroRequest;
 import com.proper.service_auth.service.AuthService;
 
@@ -38,6 +42,35 @@ public class AutenticacionController {
     public ResponseEntity<?> login(@RequestBody AuthRequest request) {
         try {
             return ResponseEntity.ok(authService.login(request.getNombreUsuario(), request.getContrasena()));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+        }
+    }
+
+    @Operation(summary = "Actualizar perfil", description = "Cambia nombre y correo del usuario autenticado")
+    @PutMapping("/perfil")
+    public ResponseEntity<?> actualizarPerfil(
+            @RequestHeader("Authorization") String authHeader,
+            @RequestBody ActualizarPerfilRequest request) {
+        try {
+            String token = authHeader.replace("Bearer ", "");
+            return ResponseEntity.ok(authService.actualizarPerfil(token, request));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+        }
+    }
+
+    @Operation(summary = "Cambiar contraseña", description = "Guarda la nueva contraseña encriptada")
+    @PutMapping("/perfil/contrasena")
+    public ResponseEntity<?> cambiarContrasena(
+            @RequestHeader("Authorization") String authHeader,
+            @RequestBody CambiarContrasenaRequest request) {
+        try {
+            String token = authHeader.replace("Bearer ", "");
+            authService.cambiarContrasena(token, request.getContrasena());
+            return ResponseEntity.ok("Contraseña actualizada");
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
         }

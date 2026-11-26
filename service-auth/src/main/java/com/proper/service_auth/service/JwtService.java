@@ -28,4 +28,13 @@ public class JwtService
                 .signWith(Keys.hmacShaKeyFor(secreto.getBytes()), SignatureAlgorithm.HS256)
                 .compact();
         }
+
+        public String extraerNombreUsuario(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(Keys.hmacShaKeyFor(secreto.getBytes()))
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .getSubject();
+}
 }

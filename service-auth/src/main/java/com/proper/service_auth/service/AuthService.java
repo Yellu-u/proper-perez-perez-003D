@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.proper.service_auth.dto.ActualizarPerfilRequest;
 import com.proper.service_auth.dto.AuthResponse;
 import com.proper.service_auth.dto.RegistroRequest;
 import com.proper.service_auth.model.Rol;
@@ -66,5 +67,39 @@ public class AuthService {
 
                 String token = jwtService.generarToken(username, roles);
                 return new AuthResponse(token, username, user.getNombreCompleto(), roles);
+        }
+
+        public AuthResponse actualizarPerfil(String token, ActualizarPerfilRequest request){
+                String nombreUsuarioActual = jwtService.extraerNombreUsuario(token);
+                Usuario usuario = usuarioRepository.findByNombreUsuario(nombreUsuarioActual).orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+                String nuevoCorreo = request.getCorreo();
+                if (nuevoCorreo == null || nuevoCorreo.isBlank() || request.getNombreCompleto() == null || request.getNombreCompleto().isBlank()) {
+                        throw new IllegalArgumentException("Nombre y correo son obligatorios");
+                }
+
+                if (!nuevoCorreo.equalsIgnoreCase(usuario.getCorreo()) && usuarioRepository.existsByCorreo(nuevoCorreo)){
+                        throw new IllegalArgumentException("El correo ya está en uso");
+                }
+
+                usuario.setNombreCompleto(request.getNombreCompleto());
+                usuario.setCorreo(nuevoCorreo);
+                usuario.setNombreUsuario(nuevoCorreo); // el login usa este campo
+                usuarioRepository.save(usuario);
+
+                List<String> roles = usuario.getRoles().stream()
+                                .map(Rol::getNombreRol)
+                                .collect(Collectors.toList());
+                String nuevoToken = jwtService.generarToken(nuevoCorreo, roles);
+                return new AuthResponse(nuevoToken, nuevoCorreo, usuario.getNombreCompleto(), roles);
+        }
+
+        public void cambiarContrasena(String token, String nuevaContrasena) {
+                String nombreUsuario = jwtService.extraerNombreUsuario(token);
+                Usuario usuario = usuarioRepository.findByNombreUsuario(nombreUsuario)
+                                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+                usuario.setContrasena(passwordEncoder.encode(nuevaContrasena));
+                usuarioRepository.save(usuario);
         }
 }
